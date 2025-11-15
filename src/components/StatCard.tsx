@@ -1,6 +1,11 @@
 import { Card, CardContent, Typography, Box } from "@mui/material";
-
-const StatCard = ({ title, value, icon, color }: any) => {
+interface PropsStat {
+  title?:string;
+  value?:string|number;
+  icon?:React.ReactNode;
+  color?:string;
+}
+const StatCard = ({ title, value, icon, color }: PropsStat) => {
   return (
     <Card>
       <CardContent>

@@ -3,8 +3,8 @@ import { Grid, Card, CardContent, Typography, Box } from "@mui/material";
 import {
   People as PeopleIcon,
   TrendingUp as TrendingUpIcon,
-  Activity as ActivityIcon,
-  UserCheck as UserCheckIcon,
+  LocalActivity as ActivityIcon,
+  VerifiedUserOutlined as UserCheckIcon,
 } from "@mui/icons-material";
 import userStore from "../stores/userStore";
 import SimpleChart from "./SimpleChart";

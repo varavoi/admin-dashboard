@@ -1,29 +1,37 @@
-import React from "react"
-import { ThemeProvider, createTheme } from "@mui/material/styles"
-import  CssBaseline from "@mui/material/CssBaseline"
-import {Box, Typography} from '@mui/material'
-import UserList from "./components/UserList"
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Dashboard from "./components/Dashboard";
+import Users from "./pages/Users";
 
 const darkTheme = createTheme({
-  palette:{
-    mode:'dark'
-  }
-})
+  palette: {
+    mode: "dark",
+  },
+});
 function App() {
-    return (
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline/>
-        <Box sx={{padding:3}}>
-          <Typography variant="h4" component='h1' gutterBottom>
-              Панель администрирования
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom sx={{mb:3}}>
-            Обзор системы и управление пользователями
-          </Typography>
-          <UserList/>
-        </Box>
-      </ThemeProvider>
-  )
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/users" element={<Users />} />
+            <Route
+              path="/analytics"
+              element={<div>Аналитика - скоро будет!</div>}
+            />
+            <Route
+              path="/settings"
+              element={<div>Настройки - скоро будет!</div>}
+            />
+          </Routes>
+        </Layout>
+      </Router>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
