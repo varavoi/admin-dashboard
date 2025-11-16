@@ -5,7 +5,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./components/Dashboard";
 import Users from "./pages/Users";
 import Analytics from "./pages/Analytics";
-import { Settings } from "@mui/icons-material";
+import Settings from "./pages/Settings";
 
 const darkTheme = createTheme({
   palette: {
