@@ -17,11 +17,19 @@ import {
   FormControl,
   InputLabel,
   Button,
+  IconButton,
 } from "@mui/material";
-import { Search as SearchIcon, Add as AddIcon } from "@mui/icons-material";
+import {
+  Search as SearchIcon,
+  Add as AddIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+} from "@mui/icons-material";
 import userStore from "../stores/userStore";
 import type { User } from "../types";
 import { useState } from "react";
+import UserFormModal from "./UserFormModal";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 const UserList = observer(() => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,6 +37,11 @@ const UserList = observer(() => {
     "all" | "active" | "inactive"
   >("all");
   const [roleFilter, setRoleFilter] = useState("all");
+
+  // Состояния для модальных окон
+  const [isUserFormOpen, setIsUserFormOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const filteredUsers = userStore.users.filter((user: User) => {
     const matchesSearch =
@@ -39,6 +52,25 @@ const UserList = observer(() => {
     const matchesRole = roleFilter === "all" || user.role === roleFilter;
     return matchesSearch && matchesStatus && matchesRole;
   });
+  const handleAddUser = () => {
+    setSelectedUser(null);
+    setIsUserFormOpen(true);
+  };
+  const handleEditUser = (user: User) => {
+    setSelectedUser(user);
+    setIsUserFormOpen(true);
+  };
+  const handleDeleteUser = (user: User) => {
+    setSelectedUser(user);
+    setIsDeleteModalOpen(true);
+  };
+  const confirmDelete = () => {
+    if (selectedUser) {
+      userStore.deleteUser(selectedUser.id);
+      setIsDeleteModalOpen(false);
+      setSelectedUser(null);
+    }
+  };
 
   return (
     <Box>
@@ -53,7 +85,11 @@ const UserList = observer(() => {
         <Typography variant="h6" gutterBottom>
           Пользователи ({filteredUsers.length})
         </Typography>
-        <Button variant="contained" startIcon={<AddIcon />}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleAddUser}
+        >
           Добавить пользователя
         </Button>
       </Box>
@@ -129,6 +165,20 @@ const UserList = observer(() => {
                   />
                 </TableCell>
                 <TableCell>{user.joinDate}</TableCell>
+                <TableCell>
+                  <IconButton
+                    color="primary"
+                    onClick={() => handleEditUser(user)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDeleteUser(user)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -140,6 +190,18 @@ const UserList = observer(() => {
           <Typography color="textSecondary">Пользователи не найдены</Typography>
         </Box>
       )}
+      {/* Модальные окна */}
+      <UserFormModal
+        open={isUserFormOpen}
+        onClose={() => setIsUserFormOpen(false)}
+        userId={selectedUser?.id}
+      />
+      <DeleteConfirmationModal
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        userName={selectedUser?.name || ""}
+      />
     </Box>
   );
 });
