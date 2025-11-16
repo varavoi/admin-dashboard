@@ -9,6 +9,8 @@ import {
 import userStore from "../stores/userStore";
 import SimpleChart from "./SimpleChart";
 import StatCard from "./StatCard";
+import CustomPieChart from "./PieChart";
+import CustomBarChart from "./BarChart";
 
 const Dashboard = observer(() => {
   return (
@@ -58,7 +60,7 @@ const Dashboard = observer(() => {
 
       {/* Графики */}
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid size={{ xs: 12, md: 7 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -68,13 +70,13 @@ const Dashboard = observer(() => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, md: 5 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Распределение по ролям
               </Typography>
-              {/* Здесь будет круговой график */}
+              <CustomPieChart/>
               <Box
                 sx={{
                   height: 300,
@@ -84,8 +86,9 @@ const Dashboard = observer(() => {
                 }}
               >
                 <Typography color="textSecondary">
-                  Круговой график появится здесь
+                  Активность по дням недели
                 </Typography>
+                <CustomBarChart/>
               </Box>
             </CardContent>
           </Card>
