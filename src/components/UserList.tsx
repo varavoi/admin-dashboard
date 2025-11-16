@@ -10,16 +10,99 @@ import {
   Chip,
   Box,
   Typography,
+  TextField,
+  InputAdornment,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  Button,
 } from "@mui/material";
+import { Search as SearchIcon, Add as AddIcon } from "@mui/icons-material";
 import userStore from "../stores/userStore";
-
+import { User } from "../types";
+import { useState } from "react";
 
 const UserList = observer(() => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "inactive"
+  >("all");
+  const [roleFilter, setRoleFilter] = useState("all");
+
+  const filteredUsers = userStore.users.filter((user: User) => {
+    const matchesSearch =
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || user.status === statusFilter;
+    const matchesRole = roleFilter === "all" || user.role === roleFilter;
+    return matchesSearch && matchesStatus && matchesRole;
+  });
+
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        Пользователи ({userStore.totalUsers})
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 3,
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Пользователи ({filteredUsers.length})
+        </Typography>
+        <Button variant="contained" startIcon={<AddIcon />}>
+          Добавить пользователя
+        </Button>
+      </Box>
+
+      {/* Фильтры и поиск */}
+      <Box sx={{ display: "flex", gap: 2, mb: 3, flexWrap: "wrap" }}>
+        <TextField
+          placeholder="Поиск по имени или email..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            },
+          }}
+          sx={{ minWidth: 300 }}
+        />
+        <FormControl sx={{ minWidth: 120 }}>
+          <InputLabel>Статус</InputLabel>
+          <Select
+            value={statusFilter}
+            label="Статус"
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <MenuItem value="all">Все</MenuItem>
+            <MenuItem value="active">Активные</MenuItem>
+            <MenuItem value="inactive">Неактивные</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ minWidth: 120 }}>
+          <InputLabel>Роль</InputLabel>
+          <Select
+            value={roleFilter}
+            label="Роль"
+            onChange={(e) => setRoleFilter(e.target.value)}
+          >
+            <MenuItem value="all">Все</MenuItem>
+            <MenuItem value="Администратор">Администратор</MenuItem>
+            <MenuItem value="Модератор">Модератор</MenuItem>
+            <MenuItem value="Пользователь">Пользователь</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -33,7 +116,7 @@ const UserList = observer(() => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {userStore.users.map((user) => (
+            {filteredUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.id}</TableCell>
                 <TableCell>{user.name}</TableCell>
@@ -51,6 +134,12 @@ const UserList = observer(() => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {filteredUsers.length === 0 && (
+        <Box sx={{ textAlign: "center", py: 4 }}>
+          <Typography color="textSecondary">Пользователи не найдены</Typography>
+        </Box>
+      )}
     </Box>
   );
 });
