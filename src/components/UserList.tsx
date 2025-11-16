@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { Search as SearchIcon, Add as AddIcon } from "@mui/icons-material";
 import userStore from "../stores/userStore";
-import { User } from "../types";
+import type { User } from "../types";
 import { useState } from "react";
 
 const UserList = observer(() => {
