@@ -5,6 +5,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./components/Dashboard";
 import Users from "./pages/Users";
 import Analytics from "./pages/Analytics";
+import { Settings } from "@mui/icons-material";
 
 const darkTheme = createTheme({
   palette: {
@@ -26,7 +27,7 @@ function App() {
             />
             <Route
               path="/settings"
-              element={<div>Настройки - скоро будет!</div>}
+              element={<Settings/>}
             />
           </Routes>
         </Layout>
