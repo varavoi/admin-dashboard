@@ -38,5 +38,25 @@ class UserStore {
   get totalUsers(){
     return this.users.length
   }
+   // CRUD операции
+  addUser(user:Omit<User,'id'>):void{
+    const newUser:User={
+      ...user,
+      id:Math.max(0,...this.users.map(u=>u.id))+1
+    }
+    this.users.push(newUser)
+  }
+  updateUser(updateUser:User):void{
+    const index = this.users.findIndex(user=>user.id===updateUser.id)
+    if(index !== -1){
+      this.users[index]=updateUser
+    }
+  }
+  deleteUser(userId:number):void{
+    this.users=this.users.filter(user=>user.id!==userId)
+  }
+  getUserById(userId:number):User|undefined{
+      return this.users.find(user=>user.id===userId)
+  }
 }
 export default new UserStore()
