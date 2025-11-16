@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboard from "./components/Dashboard";
 import Users from "./pages/Users";
+import Analytics from "./pages/Analytics";
 
 const darkTheme = createTheme({
   palette: {
@@ -21,7 +22,7 @@ function App() {
             <Route path="/users" element={<Users />} />
             <Route
               path="/analytics"
-              element={<div>Аналитика - скоро будет!</div>}
+              element={<Analytics/>}
             />
             <Route
               path="/settings"
