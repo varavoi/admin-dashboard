@@ -7,29 +7,17 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Chip,
   Box,
   Typography,
-  TextField,
-  InputAdornment,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Button,
-  IconButton,
 } from "@mui/material";
-import {
-  Search as SearchIcon,
-  Add as AddIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-} from "@mui/icons-material";
 import userStore from "../stores/userStore";
 import type { User } from "../types";
 import { useState } from "react";
 import UserFormModal from "./UserFormModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import SearchAndFilters from "./SearchAndFilters";
+import TableActions from "./TableActions";
+import UserTableRow from "./UserTableRow";
 
 const UserList = observer(() => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -72,72 +60,35 @@ const UserList = observer(() => {
     }
   };
 
+  const handleSearchChange = (value: string): void => {
+    setSearchTerm(value);
+  };
+  const handleStatusChange = (value: "all" | "active" | "inactive"): void => {
+    setStatusFilter(value);
+  };
+  const handleRoleChange = (value: string): void => {
+    setRoleFilter(value);
+  };
+
+  const searchAndFiltersProps = {
+    searchTerm,
+    onSearchChange: handleSearchChange,
+    statusFilter,
+    onStatusFilterChange: handleStatusChange,
+    roleFilter,
+    onRoleFilterChange: handleRoleChange,
+  };
+  const tableActionsProps = {
+    title: "Пользователи",
+    count: filteredUsers.length,
+    onAddClick: handleAddUser,
+    addButtonText: "Добавить пользователя",
+  };
+
   return (
     <Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 3,
-        }}
-      >
-        <Typography variant="h6" gutterBottom>
-          Пользователи ({filteredUsers.length})
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleAddUser}
-        >
-          Добавить пользователя
-        </Button>
-      </Box>
-
-      {/* Фильтры и поиск */}
-      <Box sx={{ display: "flex", gap: 2, mb: 3, flexWrap: "wrap" }}>
-        <TextField
-          placeholder="Поиск по имени или email..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{ minWidth: 300 }}
-        />
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>Статус</InputLabel>
-          <Select
-            value={statusFilter}
-            label="Статус"
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <MenuItem value="all">Все</MenuItem>
-            <MenuItem value="active">Активные</MenuItem>
-            <MenuItem value="inactive">Неактивные</MenuItem>
-          </Select>
-        </FormControl>
-
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>Роль</InputLabel>
-          <Select
-            value={roleFilter}
-            label="Роль"
-            onChange={(e) => setRoleFilter(e.target.value)}
-          >
-            <MenuItem value="all">Все</MenuItem>
-            <MenuItem value="Администратор">Администратор</MenuItem>
-            <MenuItem value="Модератор">Модератор</MenuItem>
-            <MenuItem value="Пользователь">Пользователь</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
+      <TableActions {...tableActionsProps} />
+      <SearchAndFilters {...searchAndFiltersProps} />
 
       <TableContainer component={Paper}>
         <Table>
@@ -153,33 +104,12 @@ const UserList = observer(() => {
           </TableHead>
           <TableBody>
             {filteredUsers.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>
-                  <Chip
-                    label={user.status === "active" ? "Активен" : "Неактивен"}
-                    color={user.status === "active" ? "success" : "default"}
-                  />
-                </TableCell>
-                <TableCell>{user.joinDate}</TableCell>
-                <TableCell>
-                  <IconButton
-                    color="primary"
-                    onClick={() => handleEditUser(user)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    color="error"
-                    onClick={() => handleDeleteUser(user)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
+              <UserTableRow
+                key={user.id}
+                user={user}
+                onEdit={handleEditUser}
+                onDelete={handleDeleteUser}
+              />
             ))}
           </TableBody>
         </Table>

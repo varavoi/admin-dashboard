@@ -11,8 +11,35 @@ import SimpleChart from "./SimpleChart";
 import StatCard from "./StatCard";
 import CustomPieChart from "./PieChart";
 import CustomBarChart from "./BarChart";
+import ChartCard from "./ChartCard";
 
 const Dashboard = observer(() => {
+  const statCards = [
+    {
+      title: "Всего пользователей",
+      value: userStore.totalUsers,
+      icon: <PeopleIcon fontSize="inherit" />,
+      color: "#1976d2",
+    },
+    {
+      title: "Активных",
+      value: userStore.activeUsersCount,
+      icon: <UserCheckIcon fontSize="inherit" />,
+      color: "#2e7d32",
+    },
+    {
+      title: "Рост за месяц",
+      value: "+12%",
+      icon: <TrendingUpIcon fontSize="inherit" />,
+      color: "#ed6c02",
+    },
+    {
+      title: "Активность",
+      value: "87%",
+      icon: <ActivityIcon fontSize="inherit" />,
+      color: "#9c27b0",
+    },
+  ];
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
@@ -24,74 +51,29 @@ const Dashboard = observer(() => {
 
       {/* Карточки статистики */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <StatCard
-            title="Всего пользователей"
-            value={userStore.totalUsers}
-            icon={<PeopleIcon fontSize="inherit" />}
-            color="#1976d2"
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <StatCard
-            title="Активных"
-            value={userStore.activeUsersCount}
-            icon={<UserCheckIcon fontSize="inherit" />}
-            color="#2e7d32"
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <StatCard
-            title="Рост за месяц"
-            value="+12%"
-            icon={<TrendingUpIcon fontSize="inherit" />}
-            color="#ed6c02"
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <StatCard
-            title="Активность"
-            value="87%"
-            icon={<ActivityIcon fontSize="inherit" />}
-            color="#9c27b0"
-          />
-        </Grid>
+        {statCards.map((cards) => (
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <StatCard {...cards} />
+          </Grid>
+        ))}
       </Grid>
 
       {/* Графики */}
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 7 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Активность пользователей
-              </Typography>
+          <ChartCard title="Активность пользователей">
               <SimpleChart />
-            </CardContent>
-          </Card>
+          </ChartCard>
+          
         </Grid>
         <Grid size={{ xs: 12, md: 5 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Распределение по ролям
-              </Typography>
-              <CustomPieChart/>
-              <Box
-                sx={{
-                  height: 300,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Typography color="textSecondary">
-                  Активность по дням недели
-                </Typography>
-                <CustomBarChart/>
-              </Box>
-            </CardContent>
-          </Card>
+          <ChartCard title="Распределение по ролям">
+              <CustomPieChart />
+          </ChartCard>
+          <ChartCard title="Активность по дням недели">
+              <CustomBarChart />
+          </ChartCard>
+          
         </Grid>
       </Grid>
     </Box>
