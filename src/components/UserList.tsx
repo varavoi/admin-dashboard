@@ -7,8 +7,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Box,
-  Typography,
+  Box
 } from "@mui/material";
 import userStore from "../stores/userStore";
 import type { User } from "../types";
@@ -18,28 +17,27 @@ import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import SearchAndFilters from "./SearchAndFilters";
 import TableActions from "./TableActions";
 import UserTableRow from "./UserTableRow";
+import { useUserFilter } from "../hooks/useUsersFilter";
+import { useToast } from "../hooks/useToast";
+import EmptyState from "./EmptyState";
 
 const UserList = observer(() => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<
-    "all" | "active" | "inactive"
-  >("all");
-  const [roleFilter, setRoleFilter] = useState("all");
+  const {
+    searchTerm,
+    setSearchTerm,
+    statusFilter,
+    setStatusFilter,
+    roleFilter,
+    setRoleFilter,
+    filteredUsers,
+  } = useUserFilter();
 
+  const { showToast } = useToast();
   // Состояния для модальных окон
   const [isUserFormOpen, setIsUserFormOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const filteredUsers = userStore.users.filter((user: User) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === "all" || user.status === statusFilter;
-    const matchesRole = roleFilter === "all" || user.role === roleFilter;
-    return matchesSearch && matchesStatus && matchesRole;
-  });
   const handleAddUser = () => {
     setSelectedUser(null);
     setIsUserFormOpen(true);
@@ -54,29 +52,20 @@ const UserList = observer(() => {
   };
   const confirmDelete = () => {
     if (selectedUser) {
-      userStore.deleteUser(selectedUser.id);
+      userStore.removeUser(selectedUser.id);
+      showToast("Пользователь успешно удален", "success");
       setIsDeleteModalOpen(false);
       setSelectedUser(null);
     }
   };
 
-  const handleSearchChange = (value: string): void => {
-    setSearchTerm(value);
-  };
-  const handleStatusChange = (value: "all" | "active" | "inactive"): void => {
-    setStatusFilter(value);
-  };
-  const handleRoleChange = (value: string): void => {
-    setRoleFilter(value);
-  };
-
   const searchAndFiltersProps = {
     searchTerm,
-    onSearchChange: handleSearchChange,
+    onSearchChange: setSearchTerm,
     statusFilter,
-    onStatusFilterChange: handleStatusChange,
+    onStatusFilterChange: setStatusFilter,
     roleFilter,
-    onRoleFilterChange: handleRoleChange,
+    onRoleFilterChange: setRoleFilter,
   };
   const tableActionsProps = {
     title: "Пользователи",
@@ -100,6 +89,8 @@ const UserList = observer(() => {
               <TableCell>Роль</TableCell>
               <TableCell>Статус</TableCell>
               <TableCell>Дата регистрации</TableCell>
+
+              <TableCell>Действия</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -116,9 +107,7 @@ const UserList = observer(() => {
       </TableContainer>
 
       {filteredUsers.length === 0 && (
-        <Box sx={{ textAlign: "center", py: 4 }}>
-          <Typography color="textSecondary">Пользователи не найдены</Typography>
-        </Box>
+        <EmptyState searchTerm={searchTerm}/>
       )}
       {/* Модальные окна */}
       <UserFormModal
