@@ -1,7 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import type { User } from "../types";
 
-
 class UserStore {
   users: User[] = [
     {
@@ -29,34 +28,55 @@ class UserStore {
       joinDate: "2024-03-10",
     },
   ];
-  constructor(){
-    makeAutoObservable(this)
+  constructor() {
+    makeAutoObservable(this);
   }
-  get activeUsersCount(){
-    return this.users.filter(user=>user.status==='active').length
+  get activeUsersCount() {
+    return this.users.filter((user) => user.status === "active").length;
   }
-  get totalUsers(){
-    return this.users.length
+  get totalUsers() {
+    return this.users.length;
   }
-   // CRUD операции
-  addUser(user:Omit<User,'id'>):void{
-    const newUser:User={
+  // CRUD операции
+  addUser(user: Omit<User, "id">): void {
+    const newUser: User = {
       ...user,
-      id:Math.max(0,...this.users.map(u=>u.id))+1
+      id: Math.max(0, ...this.users.map((u) => u.id)) + 1,
+    };
+    this.users.push(newUser);
+  }
+  updateUser(updateUser: User): void {
+    const index = this.users.findIndex((user) => user.id === updateUser.id);
+    if (index !== -1) {
+      this.users[index] = updateUser;
     }
-    this.users.push(newUser)
   }
-  updateUser(updateUser:User):void{
-    const index = this.users.findIndex(user=>user.id===updateUser.id)
-    if(index !== -1){
-      this.users[index]=updateUser
+  deleteUser(userId: number): void {
+    this.users = this.users.filter((user) => user.id !== userId);
+  }
+  getUserById(userId: number): User | undefined {
+    return this.users.find((user) => user.id === userId);
+  }
+
+  // Новые методы с бизнес-логикой
+  createUser(userData: Omit<User, "id">) {
+    this.addUser(userData);
+  }
+  editUser(userId: number, userData: Partial<User>) {
+    const user = this.getUserById(userId);
+    if (user) {
+      this.updateUser({ ...user, ...userData });
     }
   }
-  deleteUser(userId:number):void{
-    this.users=this.users.filter(user=>user.id!==userId)
+  removeUser(userId: number) {
+    this.deleteUser(userId);
   }
-  getUserById(userId:number):User|undefined{
-      return this.users.find(user=>user.id===userId)
+  // Статистические методы
+  getUsersByStatus(status: User["status"]) {
+    return this.users.filter((user) => user.status === status);
+  }
+  getUsersByRole(role: string) {
+    return this.users.filter((user) => user.role === role);
   }
 }
-export default new UserStore()
+export default new UserStore();
