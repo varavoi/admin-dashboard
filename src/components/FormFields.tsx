@@ -8,13 +8,15 @@ import {
   type SelectChangeEvent,
 } from "@mui/material";
 import { initialFormData } from "../constants";
-interface FormFields{
+interface FormFieldsProps{
     formData:typeof initialFormData
+    errors:Partial<typeof initialFormData>
     onChange:(field:keyof typeof initialFormData)=>
         (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> |SelectChangeEvent)=>void
 }
-const FormFields:React.FC<FormFields>= ({
+const FormFields:React.FC<FormFieldsProps>= ({
     formData,
+    errors,
     onChange
 }) => {
     return (
@@ -23,6 +25,8 @@ const FormFields:React.FC<FormFields>= ({
               label="Имя"
               value={formData.name}
               onChange={onChange("name")}
+              error={!!errors.name}
+              helperText={errors.name}
               required
               fullWidth
             />
@@ -31,6 +35,8 @@ const FormFields:React.FC<FormFields>= ({
               type="email"
               value={formData.email}
               onChange={onChange("email")}
+              error={!!errors.email}
+              helperText={errors.email}
               required
               fullWidth
             />

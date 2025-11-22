@@ -11,10 +11,35 @@ import userStore from "../stores/userStore";
 import {  useState, useMemo } from "react";
 import FormFields from "./FormFields";
 import { initialFormData } from "../constants";
+import { useToast } from '../hooks/useToast';
+export type UserFormErrors = {
+  name?: string;
+  email?: string;
+  role?: string;
+  status?: "active" | "inactive"|undefined;
+}
+const validateForm =(formData:typeof initialFormData)=>{
+   const errors: UserFormErrors = {}
+  if(!formData.name.trim()){
+    errors.name ='Имя обязательно';
+  }
+  if (!formData.email.trim()) {
+    errors.email = 'Email обязателен';
+  }
+  else if(!/\S+@\S+\.\S+/.test(formData.email)){
+    errors.email = 'Некорректный формат email';
+  }
+  return {
+    isValid:Object.keys(errors).length===0,
+    errors
+  }
+}
 
 const UserFormModal = ({ open, onClose, userId }: UserFormModalProps) => {
   const isEdit = Boolean(userId);
   const user = userId ? userStore.getUserById(userId) : null;
+  const { showToast } = useToast();
+  const [errors, setErrors]=useState<UserFormErrors>({})
  const initialData = useMemo(():UserFormData => {
     if (user) {
       return {
@@ -24,27 +49,36 @@ const UserFormModal = ({ open, onClose, userId }: UserFormModalProps) => {
         status: user.status
       };
     }
-    
-    return initialFormData;
+    else{
+      return initialFormData;
+    }
+    setErrors({})
   }, [user]); 
   const [formData, setFormData] = useState<UserFormData>(initialData);
-  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isEdit && user) {
+    const validation = validateForm(formData)
+    if(!validation.isValid){
+      setErrors(validation.errors)
+    }
+    try {
+      if (isEdit && user) {
       console.log({...user})
-      userStore.updateUser({
-        ...user,
-        ...formData,
-      });
+      userStore.editUser(user.id,formData)
+      showToast('Пользователь успешно обновлен', 'success')
     } else {
-      userStore.addUser({
+      userStore.createUser({
         ...formData,
         joinDate: new Date().toISOString().split("T")[0],
       });
+      showToast('Пользователь успешно создан', 'success')
     }
     onClose();
+    } catch {
+      showToast(`Произошла ошибка при сохранении`, 'error');
+    }
+    
   };
 
   const handleChange = (field: keyof UserFormData) => 
@@ -53,6 +87,10 @@ const UserFormModal = ({ open, onClose, userId }: UserFormModalProps) => {
       ...prev,
       [field]: event.target.value,
     }));
+    // Очищаем ошибку при изменении поля
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: undefined }));
+    }
   };
 
   return (
@@ -64,6 +102,7 @@ const UserFormModal = ({ open, onClose, userId }: UserFormModalProps) => {
         <DialogContent>
           <FormFields
             formData={formData}
+            errors={errors}
             onChange={handleChange}
           />
         </DialogContent>
