@@ -1,6 +1,7 @@
 import { TableRow, TableCell, Chip, IconButton } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import type { User } from "../types";
+import StatusChip from "./StatusChip";
 
 interface UserTableRowProps {
   user: User;
@@ -20,10 +21,7 @@ const UserTableRow: React.FC<UserTableRowProps> = ({
       <TableCell>{user.email}</TableCell>
       <TableCell>{user.role}</TableCell>
       <TableCell>
-        <Chip
-          label={user.status === "active" ? "Активен" : "Неактивен"}
-          color={user.status === "active" ? "success" : "default"}
-        />
+        <StatusChip status={user.status}/>
       </TableCell>
       <TableCell>{user.joinDate}</TableCell>
       <TableCell>
