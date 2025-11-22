@@ -6,6 +6,8 @@ import Dashboard from "./components/Dashboard";
 import Users from "./pages/Users";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
+import Toast from "./components/Toast";
+import { useToast } from './hooks/useToast';
 
 const darkTheme = createTheme({
   palette: {
@@ -13,6 +15,7 @@ const darkTheme = createTheme({
   },
 });
 function App() {
+  const { toast, hideToast } = useToast();
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
@@ -31,6 +34,12 @@ function App() {
             />
           </Routes>
         </Layout>
+        <Toast
+          open={toast.open}
+          message={toast.message}
+          severity={toast.severity}
+          onClose={hideToast}
+        />
       </Router>
     </ThemeProvider>
   );
