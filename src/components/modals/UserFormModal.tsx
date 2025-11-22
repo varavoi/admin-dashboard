@@ -8,10 +8,10 @@ import {
 } from "@mui/material";
 import type { UserFormData, UserFormModalProps } from "../../types";
 import userStore from "../../stores/userStore";
-import {  useState, useMemo } from "react";
+import {  useState, useEffect } from "react";
 import FormFields from "../ui/FormFields";
 import { initialFormData } from "../../constants";
-import { useToast } from '../../hooks/useToast';
+import {useToast} from '../../contexts/ToastContext'
 export type UserFormErrors = {
   name?: string;
   email?: string;
@@ -35,27 +35,29 @@ const validateForm =(formData:typeof initialFormData)=>{
   }
 }
 
-const UserFormModal = ({ open, onClose, userId }: UserFormModalProps) => {
-  const isEdit = Boolean(userId);
-  const user = userId ? userStore.getUserById(userId) : null;
+const UserFormModal = ({ open, onClose, user }: UserFormModalProps) => {
+  const isEdit = Boolean(user);
   const { showToast } = useToast();
   const [errors, setErrors]=useState<UserFormErrors>({})
- const initialData = useMemo(():UserFormData => {
-    if (user) {
-      return {
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        status: user.status
-      };
-    }
-    else{
-      return initialFormData;
-    }
-    setErrors({})
-  }, [user]); 
-  const [formData, setFormData] = useState<UserFormData>(initialData);
 
+  const [formData, setFormData] = useState<UserFormData>(initialFormData);
+useEffect(() => {
+    if (open) {
+      if (user) {
+        // Редактирование существующего пользователя
+        setFormData({
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          status: user.status
+        });
+      } else {
+        // Создание нового пользователя
+        setFormData(initialFormData);
+      }
+      setErrors({});
+    }
+  }, [open, user]); 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const validation = validateForm(formData)

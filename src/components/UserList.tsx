@@ -18,9 +18,8 @@ import SearchAndFilters from "./ui/SearchAndFilters";
 import TableActions from "./ui/TableActions";
 import UserTableRow from "./ui/UserTableRow";
 import { useUserFilter } from "../hooks/useUsersFilter";
-import { useToast } from "../hooks/useToast";
 import EmptyState from "./ui/EmptyState";
-
+import { useToast } from '../contexts/ToastContext';
 const UserList = observer(() => {
   const {
     searchTerm,
@@ -117,7 +116,7 @@ const UserList = observer(() => {
       <UserFormModal
         open={isUserFormOpen}
         onClose={() => setIsUserFormOpen(false)}
-        userId={selectedUser?.id}
+        user={selectedUser}
       />
       <DeleteConfirmationModal
         open={isDeleteModalOpen}

@@ -12,7 +12,7 @@ export type UserFormData = Omit<User, "id" | "joinDate"> & {
 export interface UserFormModalProps {
   open: boolean;
   onClose: () => void;
-  userId?: number;
+  user?: User | null;
 }
 export interface chartData{
     name:string;

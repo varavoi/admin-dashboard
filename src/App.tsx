@@ -6,8 +6,7 @@ import Dashboard from "./components/Dashboard";
 import Users from "./pages/Users";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
-import Toast from "./components/ui/Toast";
-import { useToast } from './hooks/useToast';
+import { ToastProvider } from "./contexts/ToastContext";
 
 const darkTheme = createTheme({
   palette: {
@@ -15,32 +14,21 @@ const darkTheme = createTheme({
   },
 });
 function App() {
-  const { toast, hideToast } = useToast();
   return (
-    <ThemeProvider theme={darkTheme}>
+   <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/users" element={<Users />} />
-            <Route
-              path="/analytics"
-              element={<Analytics/>}
-            />
-            <Route
-              path="/settings"
-              element={<Settings/>}
-            />
-          </Routes>
-        </Layout>
-        <Toast
-          open={toast.open}
-          message={toast.message}
-          severity={toast.severity}
-          onClose={hideToast}
-        />
-      </Router>
+      <ToastProvider>
+        <Router>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </ToastProvider>
     </ThemeProvider>
   );
 }

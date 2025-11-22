@@ -43,12 +43,14 @@ class UserStore {
       ...user,
       id: Math.max(0, ...this.users.map((u) => u.id)) + 1,
     };
-    this.users.push(newUser);
+    this.users=[...this.users,newUser];
   }
-  updateUser(updateUser: User): void {
-    const index = this.users.findIndex((user) => user.id === updateUser.id);
+  updateUser(updatedUser: User): void {
+    const index = this.users.findIndex((user) => user.id === updatedUser.id);
     if (index !== -1) {
-      this.users[index] = updateUser;
+      this.users = this.users.map(user => 
+        user.id === updatedUser.id ? updatedUser : user
+      );
     }
   }
   deleteUser(userId: number): void {
