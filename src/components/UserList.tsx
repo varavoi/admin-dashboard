@@ -7,7 +7,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Box
+  Box,
 } from "@mui/material";
 import userStore from "../stores/userStore";
 import type { User } from "../types";
@@ -79,7 +79,13 @@ const UserList = observer(() => {
       <TableActions {...tableActionsProps} />
       <SearchAndFilters {...searchAndFiltersProps} />
 
-      <TableContainer component={Paper}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          maxHeight: "calc(100vh - 300px)",
+          overflow: "auto",
+        }}
+      >
         <Table>
           <TableHead>
             <TableRow>
@@ -106,9 +112,7 @@ const UserList = observer(() => {
         </Table>
       </TableContainer>
 
-      {filteredUsers.length === 0 && (
-        <EmptyState searchTerm={searchTerm}/>
-      )}
+      {filteredUsers.length === 0 && <EmptyState searchTerm={searchTerm} />}
       {/* Модальные окна */}
       <UserFormModal
         open={isUserFormOpen}
