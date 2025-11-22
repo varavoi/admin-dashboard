@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { Grid, Card, CardContent, Typography, Box } from "@mui/material";
+import { Grid, Typography, Box } from "@mui/material";
 import {
   People as PeopleIcon,
   TrendingUp as TrendingUpIcon,
@@ -7,11 +7,11 @@ import {
   VerifiedUserOutlined as UserCheckIcon,
 } from "@mui/icons-material";
 import userStore from "../stores/userStore";
-import SimpleChart from "./SimpleChart";
-import StatCard from "./StatCard";
-import CustomPieChart from "./PieChart";
-import CustomBarChart from "./BarChart";
-import ChartCard from "./ChartCard";
+import SimpleChart from "./charts/SimpleChart";
+import StatCard from "./ui/StatCard";
+import CustomPieChart from "./charts/PieChart";
+import CustomBarChart from "./charts/BarChart";
+import ChartCard from "./charts/ChartCard";
 
 const Dashboard = observer(() => {
   const statCards = [

@@ -6,7 +6,7 @@ import Dashboard from "./components/Dashboard";
 import Users from "./pages/Users";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
-import Toast from "./components/Toast";
+import Toast from "./components/ui/Toast";
 import { useToast } from './hooks/useToast';
 
 const darkTheme = createTheme({

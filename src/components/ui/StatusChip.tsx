@@ -1,5 +1,5 @@
 import { Chip} from "@mui/material";
-import type { User } from "../types";
+import type { User } from "../../types";
 
 interface StatusChipProps {
   status: User['status'];

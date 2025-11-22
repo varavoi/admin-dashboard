@@ -1,6 +1,6 @@
 import { TableRow, TableCell, IconButton } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-import type { User } from "../types";
+import type { User } from "../../types";
 import StatusChip from "./StatusChip";
 
 interface UserTableRowProps {

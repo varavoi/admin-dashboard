@@ -6,12 +6,12 @@ import {
   Button,
   type SelectChangeEvent,
 } from "@mui/material";
-import type { UserFormData, UserFormModalProps } from "../types";
-import userStore from "../stores/userStore";
+import type { UserFormData, UserFormModalProps } from "../../types";
+import userStore from "../../stores/userStore";
 import {  useState, useMemo } from "react";
-import FormFields from "./FormFields";
-import { initialFormData } from "../constants";
-import { useToast } from '../hooks/useToast';
+import FormFields from "../ui/FormFields";
+import { initialFormData } from "../../constants";
+import { useToast } from '../../hooks/useToast';
 export type UserFormErrors = {
   name?: string;
   email?: string;

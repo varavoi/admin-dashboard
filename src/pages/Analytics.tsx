@@ -5,9 +5,9 @@ import {
     Typography,
     Box
 } from "@mui/material";
-import CustomBarChart from "../components/BarChart";
-import CustomPieChart from "../components/PieChart";
-import SimpleChart from "../components/SimpleChart";
+import CustomBarChart from "../components/charts/BarChart";
+import CustomPieChart from "../components/charts/PieChart";
+import SimpleChart from "../components/charts/SimpleChart";
 
 const Analytics = () => {
     return (

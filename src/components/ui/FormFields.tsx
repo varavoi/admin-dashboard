@@ -7,7 +7,7 @@ import {
   Box,
   type SelectChangeEvent,
 } from "@mui/material";
-import { initialFormData } from "../constants";
+import { initialFormData } from "../../constants";
 interface FormFieldsProps{
     formData:typeof initialFormData
     errors:Partial<typeof initialFormData>

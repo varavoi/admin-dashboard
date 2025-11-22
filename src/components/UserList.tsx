@@ -12,14 +12,14 @@ import {
 import userStore from "../stores/userStore";
 import type { User } from "../types";
 import { useState } from "react";
-import UserFormModal from "./UserFormModal";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
-import SearchAndFilters from "./SearchAndFilters";
-import TableActions from "./TableActions";
-import UserTableRow from "./UserTableRow";
+import UserFormModal from "./modals/UserFormModal";
+import DeleteConfirmationModal from "./modals/DeleteConfirmationModal";
+import SearchAndFilters from "./ui/SearchAndFilters";
+import TableActions from "./ui/TableActions";
+import UserTableRow from "./ui/UserTableRow";
 import { useUserFilter } from "../hooks/useUsersFilter";
 import { useToast } from "../hooks/useToast";
-import EmptyState from "./EmptyState";
+import EmptyState from "./ui/EmptyState";
 
 const UserList = observer(() => {
   const {
