@@ -7,32 +7,45 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-const data = [
-  { name: "Янв", users: 400 },
-  { name: "Фев", users: 600 },
-  { name: "Мар", users: 800 },
-  { name: "Апр", users: 1200 },
-  { name: "Май", users: 900 },
-  { name: "Июн", users: 1500 },
-];
+import { observer } from 'mobx-react-lite';
+import userStore from '../../stores/userStore';
 
-const SimpleChart = () => {
+
+const SimpleChart = observer(() => {
+  const { userChartData } = userStore;
+  if (!userChartData) {
+    return (
+      <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        Загрузка данных...
+      </div>
+    );
+  }
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={data}>
+      <LineChart data={userChartData.registrationData}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
+        <XAxis 
+          dataKey="name" 
+          angle={-45}
+          textAnchor="end"
+          height={60}
+        />
         <YAxis />
-        <Tooltip />
-        <Line
-          type="monotone"
-          dataKey="users"
-          stroke="#1976d2"
+        <Tooltip 
+          formatter={(value) => [`${value} пользователей`, 'Количество']}
+          labelFormatter={(label) => `Период: ${label}`}
+        />
+        <Line 
+          type="monotone" 
+          dataKey="пользователи" 
+          stroke="#1976d2" 
           strokeWidth={2}
+          dot={{ fill: '#1976d2', strokeWidth: 2, r: 4 }}
+          activeDot={{ r: 6, fill: '#ff5252' }}
         />
       </LineChart>
     </ResponsiveContainer>
   );
-};
+})
 
 export default SimpleChart;
