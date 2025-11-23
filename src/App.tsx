@@ -1,4 +1,4 @@
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+
 import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
@@ -7,15 +7,11 @@ import Users from "./pages/Users";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import { ToastProvider } from "./contexts/ToastContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
 function App() {
   return (
-   <ThemeProvider theme={darkTheme}>
+   <ThemeProvider>
       <CssBaseline />
       <ToastProvider>
         <Router>
