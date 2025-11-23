@@ -17,9 +17,12 @@ import {
 } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 
+interface SidebarProps{
+  systemName:string
+}
 const drawerWidth = 240;
 
-const Sidebar = () => {
+const Sidebar:React.FC<SidebarProps> = ({systemName}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const menuItems = [
@@ -43,7 +46,7 @@ const Sidebar = () => {
     >
       <Toolbar>
         <Typography variant="h6" noWrap component="div">
-          Admin Panel
+          {systemName}
         </Typography>
       </Toolbar>
       <Divider />

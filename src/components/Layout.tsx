@@ -1,14 +1,16 @@
 import { Box,Toolbar } from "@mui/material";
 import Sidebar from "./SideBar";
+import settingsStore from '../stores/settingsStore'
+import { observer } from "mobx-react-lite";
 
 interface LayoutProps{
     children:React.ReactNode
 }
 
-const Layout =({children}:LayoutProps)=>{
+const Layout =observer(({children}:LayoutProps)=>{
     return (
         <Box sx={{display:'flex'}}>
-            <Sidebar/>
+            <Sidebar systemName={settingsStore.system.name}/>
             <Box
                 component='main'
                 sx={{
@@ -23,5 +25,5 @@ const Layout =({children}:LayoutProps)=>{
             </Box>
         </Box>
     )
-}
+})
 export default Layout
