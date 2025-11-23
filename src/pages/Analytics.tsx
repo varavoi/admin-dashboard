@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { observer } from 'mobx-react-lite';
+import React, { useState } from "react";
+import { observer } from "mobx-react-lite";
 import {
   Grid,
   Card,
@@ -7,34 +7,37 @@ import {
   Typography,
   Box,
   ToggleButton,
-  ToggleButtonGroup
-} from '@mui/material';
-import { 
-  BarChart as BarChartIcon, 
+  ToggleButtonGroup,
+} from "@mui/material";
+import {
+  BarChart as BarChartIcon,
   PieChart as PieChartIcon,
-  ShowChart as LineChartIcon 
-} from '@mui/icons-material';
+  ShowChart as LineChartIcon,
+} from "@mui/icons-material";
 
-import userStore from '../stores/userStore';
-import SimpleChart from '../components/charts/SimpleChart';
-import MultiLineChart from '../components/MultiLineChart';
-import CustomPieChart from '../components/charts/PieChart';
-import CustomBarChart from '../components/charts/BarChart';
-import LoadingSpinner from '../components/LoadingSpinner';
-import ChartCard from '../components/charts/ChartCard';
-
-type ChartType = 'line' | 'bar' | 'pie';
+import userStore from "../stores/userStore";
+import SimpleChart from "../components/charts/SimpleChart";
+import MultiLineChart from "../components/MultiLineChart";
+import CustomPieChart from "../components/charts/PieChart";
+import CustomBarChart from "../components/charts/BarChart";
+import LoadingSpinner from "../components/LoadingSpinner";
+import ChartCard from "../components/charts/ChartCard";
+import {
+  convertToPieData,
+  convertToLineData,
+} from "../utils/chartUtils";
+type ChartType = "line" | "bar" | "pie";
 
 const Analytics = observer(() => {
   const { isLoading } = userStore;
-  const [chartType, setChartType] = useState<ChartType>('line');
-  
+  const [chartType, setChartType] = useState<ChartType>("line");
+
   // Получаем данные для графиков
   const chartData = userStore.getChartData();
 
   const handleChartTypeChange = (
     event: React.MouseEvent<HTMLElement>,
-    newChartType: ChartType,
+    newChartType: ChartType
   ) => {
     if (newChartType !== null) {
       setChartType(newChartType);
@@ -92,39 +95,39 @@ const Analytics = observer(() => {
       {/* Основные графики аналитики */}
       <Grid container spacing={3}>
         {/* Регистрации пользователей - линейный и столбчатый */}
-        <Grid size={{xs:12, md:6}}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <ChartCard title="Регистрации пользователей по месяцам">
-            {chartType === 'pie' ? (
-              <CustomPieChart 
-                data={chartData?.registrationData?.map(item => ({
-                  name: item.name,
-                  value: item.пользователи
-                }))} 
+            {chartType === "pie" ? (
+              <CustomPieChart
+                data={convertToPieData(
+                  chartData?.registrationData,
+                  "пользователи"
+                )}
               />
-            ) : chartType === 'bar' ? (
+            ) : chartType === "bar" ? (
               <CustomBarChart data={chartData?.registrationData} />
             ) : (
               <SimpleChart data={chartData?.registrationData} />
             )}
           </ChartCard>
         </Grid>
-        
+
         {/* Распределение по ролям - столбчатый и круговой */}
-        <Grid size={{xs:12, md:6}}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <ChartCard title="Распределение по ролям">
-            {chartType === 'line' ? (
-              <SimpleChart 
-                data={chartData?.pieChartData?.map(item => ({
-                  name: item.name,
-                  пользователи: item.value
-                }))} 
+            {chartType === "line" ? (
+              <SimpleChart
+                data={convertToLineData(
+                  chartData?.pieChartData,
+                  "пользователи"
+                )}
               />
-            ) : chartType === 'bar' ? (
-              <CustomBarChart 
-                data={chartData?.pieChartData?.map(item => ({
-                  name: item.name,
-                  пользователи: item.value
-                }))} 
+            ) : chartType === "bar" ? (
+              <CustomBarChart
+                data={convertToLineData(
+                  chartData?.pieChartData,
+                  "пользователи"
+                )}
               />
             ) : (
               <CustomPieChart data={chartData?.pieChartData} />
@@ -133,16 +136,16 @@ const Analytics = observer(() => {
         </Grid>
 
         {/* Активность по дням недели - только столбчатый */}
-        <Grid size={{xs:12}}>
+        <Grid size={{ xs: 12 }}>
           <ChartCard title="Активность по дням недели">
-            {chartType === 'line' ? (
+            {chartType === "line" ? (
               <MultiLineChart data={chartData?.weeklyActivity} />
-            ) : chartType === 'pie' ? (
-              <CustomPieChart 
-                data={chartData?.weeklyActivity?.map(item => ({
+            ) : chartType === "pie" ? (
+              <CustomPieChart
+                data={chartData?.weeklyActivity?.map((item) => ({
                   name: item.name,
-                  value: item.посещения
-                }))} 
+                  value: item.посещения,
+                }))}
               />
             ) : (
               <CustomBarChart data={chartData?.weeklyActivity} />
@@ -151,36 +154,36 @@ const Analytics = observer(() => {
         </Grid>
 
         {/* Дополнительные графики */}
-        <Grid size={{xs:12, md:6}}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <ChartCard title="Статусы пользователей">
             <CustomPieChart data={chartData?.statusData} />
           </ChartCard>
         </Grid>
 
-        <Grid size={{xs:12, md:6}}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <ChartCard title="Сравнение активности">
-            {chartType === 'line' ? (
-              <MultiLineChart 
-                data={chartData?.weeklyActivity?.map(item => ({
+            {chartType === "line" ? (
+              <MultiLineChart
+                data={chartData?.weeklyActivity?.map((item) => ({
                   name: item.name,
                   активность: item.посещения / 10,
-                  регистрации: item.регистрации * 5
-                }))} 
+                  регистрации: item.регистрации * 5,
+                }))}
               />
-            ) : chartType === 'pie' ? (
-              <CustomPieChart 
-                data={chartData?.weeklyActivity?.map(item => ({
+            ) : chartType === "pie" ? (
+              <CustomPieChart
+                data={chartData?.weeklyActivity?.map((item) => ({
                   name: item.name,
-                  value: item.посещения
-                }))} 
+                  value: item.посещения,
+                }))}
               />
             ) : (
-              <CustomBarChart 
-                data={chartData?.weeklyActivity?.map(item => ({
+              <CustomBarChart
+                data={chartData?.weeklyActivity?.map((item) => ({
                   name: item.name,
                   активность: item.посещения / 10,
-                  регистрации: item.регистрации * 5
-                }))} 
+                  регистрации: item.регистрации * 5,
+                }))}
               />
             )}
           </ChartCard>
@@ -189,14 +192,14 @@ const Analytics = observer(() => {
 
       {/* Статистическая информация */}
       <Grid container spacing={3} sx={{ mt: 1 }}>
-        <Grid size={{xs:12}}>
+        <Grid size={{ xs: 12 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Статистическая сводка
               </Typography>
               <Grid container spacing={2}>
-                <Grid size={{xs:12, md:3}}>
+                <Grid size={{ xs: 12, md: 3 }}>
                   <Typography variant="body2" color="textSecondary">
                     Всего пользователей
                   </Typography>
@@ -204,7 +207,7 @@ const Analytics = observer(() => {
                     {chartData?.stats.totalUsers || 0}
                   </Typography>
                 </Grid>
-                <Grid size={{xs:12, md:3}}>
+                <Grid size={{ xs: 12, md: 3 }}>
                   <Typography variant="body2" color="textSecondary">
                     Активных пользователей
                   </Typography>
@@ -212,7 +215,7 @@ const Analytics = observer(() => {
                     {chartData?.stats.activeUsers || 0}
                   </Typography>
                 </Grid>
-                <Grid size={{xs:12, md:3}}>
+                <Grid size={{ xs: 12, md: 3 }}>
                   <Typography variant="body2" color="textSecondary">
                     Рост за месяц
                   </Typography>
@@ -220,7 +223,7 @@ const Analytics = observer(() => {
                     {chartData?.stats.growth || "0%"}
                   </Typography>
                 </Grid>
-                <Grid size={{xs:12, md:3}}>
+                <Grid size={{ xs: 12, md: 3 }}>
                   <Typography variant="body2" color="textSecondary">
                     Общая активность
                   </Typography>
@@ -236,4 +239,4 @@ const Analytics = observer(() => {
     </Box>
   );
 });
-export default Analytics
+export default Analytics;
