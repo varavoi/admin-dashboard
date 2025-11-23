@@ -2,12 +2,16 @@ import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface SimpleChartProps {
-  data: Array<{ name: string; пользователи: number }> | undefined;
+  data: Array<{ name: string; [key: string]: number }> | undefined;
   isLoading?: boolean;
+  dataKey?: string;
 }
 
-const SimpleChart: React.FC<SimpleChartProps> = ({ data, isLoading = false }) => {
-  if (isLoading) {
+const SimpleChart: React.FC<SimpleChartProps> = ({ 
+  data, 
+  isLoading = false,
+  dataKey = 'пользователи' }) => {
+   if (isLoading) {
     return (
       <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         Загрузка данных...
@@ -15,7 +19,6 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, isLoading = false }) =>
     );
   }
 
-  // Проверяем, что данные существуют и это массив
   if (!data || !Array.isArray(data) || data.length === 0) {
     return (
       <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -29,19 +32,19 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, isLoading = false }) =>
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis 
-          dataKey="name" 
+         dataKey="name" 
           angle={-45}
           textAnchor="end"
           height={60}
         />
         <YAxis />
         <Tooltip 
-          formatter={(value) => [`${value} пользователей`, 'Количество']}
+          formatter={(value) => [`${value}`, 'Количество']}
           labelFormatter={(label) => `Период: ${label}`}
         />
         <Line 
           type="monotone" 
-          dataKey="пользователи" 
+          dataKey={dataKey} 
           stroke="#1976d2" 
           strokeWidth={2}
           dot={{ fill: '#1976d2', strokeWidth: 2, r: 4 }}
