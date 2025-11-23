@@ -8,30 +8,37 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import { observer } from 'mobx-react-lite';
+import userStore from '../../stores/userStore';
 
-const data = [
-  { name: "Пн", посещения: 4000, регистрации: 2400 },
-  { name: "Вт", посещения: 3000, регистрации: 1398 },
-  { name: "Ср", посещения: 2000, регистрации: 9800 },
-  { name: "Чт", посещения: 2780, регистрации: 3908 },
-  { name: "Пт", посещения: 1890, регистрации: 4800 },
-  { name: "Сб", посещения: 2390, регистрации: 3800 },
-  { name: "Вс", посещения: 3490, регистрации: 4300 },
-];
-const CustomBarChart = () => {
+const CustomBarChart = observer(() => {
+  const { userChartData } = userStore;
+  if (!userChartData) {
+    return (
+      <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        Загрузка данных...
+      </div>
+    );
+  }
   return (
     <ResponsiveContainer width='100%' height={300}>
-    <BarChart data={data}>
+    <BarChart data={userChartData.weeklyActivity}>
         <CartesianGrid strokeDasharray='3 3'/>
         <XAxis dataKey='name'/>
         <YAxis/>
-        <Tooltip/>
+        <Tooltip 
+          formatter={(value, name) => {
+            if (name === 'посещения') return [value, 'Посещения'];
+            if (name === 'регистрации') return [value, 'Новые регистрации'];
+            return [value, name];
+          }}
+        />
         <Legend/>
-        <Bar dataKey='посещения' fill="#8884d8"/>
-        <Bar dataKey='регистрации' fill="#82ca9d"/>
+        <Bar dataKey="посещения" fill="#8884d8" name="Посещения" />
+        <Bar dataKey="регистрации" fill="#82ca9d" name="Новые регистрации" />
     </BarChart>
     </ResponsiveContainer>
   );
-};
+});
 
 export default CustomBarChart;
