@@ -20,7 +20,7 @@ import {
 } from "@mui/icons-material";
 import { observer } from "mobx-react-lite";
 import settingsStore from "../stores/settingsStore";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "../hooks/useTheme";
 import { useToast } from "../contexts/ToastContext";
 import { useState } from "react";
 

@@ -7,7 +7,7 @@ import Users from "./pages/Users";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import { ToastProvider } from "./contexts/ToastContext";
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeProvider } from "./contexts/ThemeProvider";
 
 function App() {
   return (
