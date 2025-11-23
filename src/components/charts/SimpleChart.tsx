@@ -2,7 +2,7 @@ import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface SimpleChartProps {
-  data: Array<{ name: string; [key: string]: number }> | undefined;
+   data: Array<{ name: string; [key: string]: string | number }> | undefined;
   isLoading?: boolean;
   dataKey?: string;
 }

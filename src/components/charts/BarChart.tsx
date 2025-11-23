@@ -2,7 +2,7 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface BarChartProps {
-  data: Array<{ [key: string]: any }> | undefined;
+  data: Array<{ name: string; [key: string]: string | number }> | undefined;
   isLoading?: boolean;
 }
 

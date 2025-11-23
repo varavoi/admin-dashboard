@@ -36,7 +36,7 @@ const Analytics = observer(() => {
   const chartData = userStore.getChartData();
 
   const handleChartTypeChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _event: React.MouseEvent<HTMLElement>,
     newChartType: ChartType
   ) => {
     if (newChartType !== null) {
@@ -100,7 +100,7 @@ const Analytics = observer(() => {
             {chartType === "pie" ? (
               <CustomPieChart
                 data={convertToPieData(
-                  chartData?.registrationData,
+                  chartData?.registrationData || [],
                   "пользователи"
                 )}
               />

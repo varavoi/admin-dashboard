@@ -2,7 +2,7 @@ import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface MultiLineChartProps {
-  data: Array<{ [key: string]: any }> | undefined;
+  data: Array<{ name: string; [key: string]: string | number }> | undefined;
   isLoading?: boolean;
 }
 
