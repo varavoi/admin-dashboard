@@ -22,6 +22,7 @@ import CustomPieChart from '../components/charts/PieChart';
 import CustomBarChart from '../components/charts/BarChart';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ChartCard from '../components/charts/ChartCard';
+
 type ChartType = 'line' | 'bar' | 'pie';
 
 const Analytics = observer(() => {
@@ -235,3 +236,4 @@ const Analytics = observer(() => {
     </Box>
   );
 });
+export default Analytics
