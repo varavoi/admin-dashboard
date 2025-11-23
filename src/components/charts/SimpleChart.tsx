@@ -1,28 +1,32 @@
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
-import { observer } from 'mobx-react-lite';
-import userStore from '../../stores/userStore';
+import React from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
+interface SimpleChartProps {
+  data: Array<{ name: string; пользователи: number }> | undefined;
+  isLoading?: boolean;
+}
 
-const SimpleChart = observer(() => {
-  const { userChartData } = userStore;
-  if (!userChartData) {
+const SimpleChart: React.FC<SimpleChartProps> = ({ data, isLoading = false }) => {
+  if (isLoading) {
     return (
       <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         Загрузка данных...
       </div>
     );
   }
+
+  // Проверяем, что данные существуют и это массив
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return (
+      <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        Нет данных для отображения
+      </div>
+    );
+  }
+
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={userChartData.registrationData}>
+      <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis 
           dataKey="name" 
@@ -46,6 +50,6 @@ const SimpleChart = observer(() => {
       </LineChart>
     </ResponsiveContainer>
   );
-})
+};
 
 export default SimpleChart;

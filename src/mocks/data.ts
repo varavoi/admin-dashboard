@@ -2,10 +2,8 @@ import type { User } from "../types";
 
 // Генерация случайных дат за последний год
 const generateRandomDate = (start: Date, end: Date): string => {
-  const date = new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
-  );
-  return date.toISOString().split("T")[0];
+  const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  return date.toISOString().split('T')[0];
 };
 const startDate = new Date();
 startDate.setFullYear(startDate.getFullYear() - 1);
